@@ -46,6 +46,7 @@ defmodule EuropeanVAT.Mixfile do
   defp deps do
     [{:httpoison, "~> 0.8.0"},
      {:sweet_xml,  "~> 0.5.0"},
+     {:poison, "~> 2.0"},
      {:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.11", only: :dev}]
   end
