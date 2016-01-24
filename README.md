@@ -66,7 +66,7 @@ EuropeanVat.must_charge_vat?("BE", "US", nil)
 
 Before interacting with the VIES web service, you must start the dedicated GenServer:
 
-``Èlixir
+```Elixir
 
 EuropeanVat.start_link
 # {:ok, #PID<0.154.0>}
@@ -82,6 +82,7 @@ EuropeanVat.check_vat("BE", "0829.071.668")
 #  %{address: "RUE LONGUE 93\n1320 BEAUVECHAIN", country_code: "BE",
 #    name: "SPRL BIGUP", request_date: {{2016, 1, 24}, 60}, valid: true,
 #    vat_number: "0829071668"}}
+
 ```
 
 ## TODO
