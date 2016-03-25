@@ -1,18 +1,19 @@
 # EuropeanVat
 
-European Union VAT number utilities for Elixir.
+European Union VAT utilities for Elixir.
 
 This library contains functions to:
 
-* sanitize VAT numbers
+* sanitize European VAT numbers
 * check if VAT must be charged for a given transaction
 * check the validity of a VAT number using the [VIES web service](http://ec.europa.eu/taxation_customs/vies/faq.html)
+* obtain up-to-date VAT rates for all EU countries
 
-This library was inspired by the [eurovat](https://github.com/phusion/eurovat) gem.
+This library was inspired by the [eurovat](https://github.com/phusion/eurovat) gem but includes additional features.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+The package can be installed via Hex as:
 
   1. Add european_vat to your list of dependencies in `mix.exs`:
 
@@ -28,7 +29,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Usage
 
-### VAT number sanitization
+### VAT Number Sanitization
 
 ```Elixir
 
@@ -40,7 +41,7 @@ EuropeanVat.sanitize_vat_number("be0829071668")
 
 ```
 
-### VAT applicability check
+### VAT Applicability Check
 
 ```Elixir
 
@@ -62,16 +63,9 @@ EuropeanVat.must_charge_vat?("BE", "US", nil)
 
 ```
 
-### VAT number verification
+### VAT Number Verification
 
-Before interacting with the VIES web service, you must start the dedicated GenServer:
-
-```Elixir
-
-EuropeanVat.start_link
-# {:ok, #PID<0.154.0>}
-
-```
+> Before interacting with the VIES web service, you **must** start the EuropeanVat application (see Installation).
 
 Going forward, you can use the `check_vat/2` function to verify VAT numbers:
 
@@ -85,9 +79,21 @@ EuropeanVat.check_vat("BE", "0829.071.668")
 
 ```
 
-## TODO
+### VAT Rate Lookup
 
-* https://euvatrates.com/rates.json
+> Before interacting with the VAT rates lookup service, you **must** start the EuropeanVat application (see Installation).
+
+
+You can lookup up-to-date VAT rate information based on a ISO-3166-2 country code:
+
+```Elixir
+
+EuropeanVat.rate("FI")
+# %{"country" => "Finland", "parking_rate" => false, "reduced_rate" => 14.0,
+#  "reduced_rate_alt" => 10.0, "standard_rate" => 24.0,
+#  "super_reduced_rate" => false}
+
+```
 
 ## License
 
