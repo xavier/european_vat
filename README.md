@@ -13,7 +13,7 @@ This library was inspired by the [eurovat](https://github.com/phusion/eurovat) g
 
 ## Installation
 
-*This library is still a work in progress and has **not been published yet** on Hex.*
+_This library is still a work in progress and **has not been published yet** on Hex._
 
 The package can be installed via Hex as:
 
