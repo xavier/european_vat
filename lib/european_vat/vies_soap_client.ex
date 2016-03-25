@@ -1,11 +1,13 @@
-defmodule EuropeanVat.Vies.SoapClient do
+defmodule EuropeanVat.ViesSoapClient do
 
   defmodule Service do
     defstruct url: nil
   end
 
-  def wsdl(wsdl_url) do
-    case HTTPoison.get(wsdl_url) do
+  @wsdl_url "http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl"
+
+  def wsdl(wsdl_url \\ nil) do
+    case HTTPoison.get(wsdl_url || @wsdl_url) do
       {:ok, response} ->
         parse_wsdl(response.body)
       http_error ->
@@ -72,6 +74,7 @@ defmodule EuropeanVat.Vies.SoapClient do
   #     </soap:Body>
   # </soap:Envelope>
 
+  @xpath_fault_response SweetXml.sigil_x("//soap:Envelope/soap:Body/soap:Fault/faultstring/text()")
   @xpath_check_vat_response SweetXml.sigil_x("//soap:Envelope/soap:Body/checkVatResponse")
   @attrs_check_vat_response [
     country_code: SweetXml.sigil_x("./countryCode/text()"),
@@ -83,9 +86,14 @@ defmodule EuropeanVat.Vies.SoapClient do
   ]
 
   def parse_check_vat_response(xml) do
-    xml
-    |> SweetXml.xpath(@xpath_check_vat_response, @attrs_check_vat_response)
-    |> convert_types(xml)
+    case SweetXml.xpath(xml, @xpath_fault_response) do
+      nil ->
+        xml
+        |> SweetXml.xpath(@xpath_check_vat_response, @attrs_check_vat_response)
+        |> convert_types(xml)
+      fault ->
+        {:error, %{valid: false, fault: to_string(fault)}}
+    end
   end
 
   defp convert_types(nil, xml), do: {:error, xml}

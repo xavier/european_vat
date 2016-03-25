@@ -1,4 +1,4 @@
-defmodule EuropeanVAT.Mixfile do
+defmodule EuropeanVat.Mixfile do
   use Mix.Project
 
   def project do
@@ -18,7 +18,9 @@ defmodule EuropeanVAT.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison]]
+    [
+      applications: [:logger, :httpoison]
+    ]
   end
 
   defp description do

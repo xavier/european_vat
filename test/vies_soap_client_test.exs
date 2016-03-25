@@ -3,8 +3,7 @@
 defmodule ViesSoapClientTest do
   use ExUnit.Case, async: true
 
-  alias EuropeanVat.Vies.SoapClient
-#       <?xml version="1.0" encoding="UTF-8"?>
+  alias EuropeanVat.ViesSoapClient
 
   test "parse_check_vat_response for valid number" do
     xml = """
@@ -34,7 +33,7 @@ defmodule ViesSoapClientTest do
       address: "RUE LONGUE 93\n1320 BEAUVECHAIN"
     }
 
-    assert SoapClient.parse_check_vat_response(xml) == {:ok, expected}
+    assert ViesSoapClient.parse_check_vat_response(xml) == {:ok, expected}
   end
 
   test "parse_check_vat_response for invalid number" do
@@ -64,7 +63,7 @@ defmodule ViesSoapClientTest do
       address: nil,
     }
 
-    assert SoapClient.parse_check_vat_response(xml) == {:ok, expected}
+    assert ViesSoapClient.parse_check_vat_response(xml) == {:ok, expected}
   end
 
 end

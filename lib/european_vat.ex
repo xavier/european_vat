@@ -1,10 +1,16 @@
-defmodule EuropeanVat do
+  defmodule EuropeanVat do
+
+  alias EuropeanVat.{Supervisor,Server}
 
   @typedoc "Alphanumerical string with the country code and number"
   @type vat_number :: String.t
 
   @typedoc "ISO-3166-2 (2 Letter Country Code)"
   @type country_code :: String.t
+
+  @typedoc "VAT rate type"
+  # "standard_rate" | "reduced_rate" | "reduced_rate_alt" | "super_reduced_rate" | "parking_rate"
+  @type rate_type :: String.t
 
   # ISO-3166-2 (2 Letter Country Code)
   @member_states %{
@@ -41,9 +47,10 @@ defmodule EuropeanVat do
   # Per http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
   @vat_number_regex ~r/\A[0-9A-Za-z\+\*\.]{2,12}\z/
 
-  @doc "Starts the client for the VAT Information Exchange System, required if you wand to use `check_vat/2` or `check_vat?/2`"
-  def start_link(args \\ []) do
-    EuropeanVat.Vies.start_link(args)
+  @doc "Starts the application which itself starts the server used communicate with the VAT Information Exchange System.
+  The application must be started if you wand to use `check_vat/2`, `check_vat?/2`, `rates/0`, `rates/1` or `rates/2`"
+  def start(_type, args) do
+    Supervisor.start_link(args)
   end
 
   @doc """
@@ -119,7 +126,7 @@ defmodule EuropeanVat do
   """
   @spec check_vat(country_code, vat_number) :: {:ok, map} | {:error, String.t}
   def check_vat(country_code, vat_number) do
-    EuropeanVat.Vies.check_vat(country_code, sanitize_vat_number(vat_number))
+    Server.check_vat(Server, country_code, sanitize_vat_number(vat_number))
   end
 
   @doc """
@@ -128,6 +135,38 @@ defmodule EuropeanVat do
   def check_vat?(country_code, vat_number) do
     {:ok, response} = check_vat(country_code, vat_number)
     response.valid
+  end
+
+  @doc """
+    Returns a map containing VAT rates information for each European country.
+
+    The first call will hit the remote API, the result is cached for next calls
+  """
+  @spec rates :: map
+  def rates do
+    Server.rates(Server)
+  end
+
+  @doc """
+    Returns a map containing VAT rate information for the given two letter ISO country code.
+
+    The first call will hit the remote API, the result is cached for next calls
+  """
+  @spec rate(country_code) :: map
+  def rate(country_code) do
+    Server.rates(Server) |> Dict.get(country_code)
+  end
+
+  @doc """
+    Returns the value for the given VAT rate of the given country code.
+
+    Rate type is a string and can be: `standard_rate`, `reduced_rate`, `reduced_rate_alt`, `super_reduced_rate`, or `parking_rate`.
+    If the rate is not applicable, `false` is returned
+
+  """
+  @spec rate(country_code, rate_type) :: float | false
+  def rate(country_code, rate_type) do
+    country_code |> rate |> Dict.get(rate_type)
   end
 
 end
