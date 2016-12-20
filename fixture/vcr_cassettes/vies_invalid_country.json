@@ -1,0 +1,25 @@
+[
+  {
+    "request": {
+      "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"urn:ec.europa.eu:taxud:vies:services:checkVat:types\">\n  <soap:Body>\n    <ns1:checkVat>\n      <ns1:countryCode>US</ns1:countryCode>\n      <ns1:vatNumber>0829071668</ns1:vatNumber>\n    </ns1:checkVat>\n  </soap:Body>\n</soap:Envelope>\n",
+      "headers": [],
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://ec.europa.eu/taxation_customs/vies/services/checkVatService"
+    },
+    "response": {
+      "body": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><soap:Fault><faultcode>soap:Server</faultcode><faultstring>INVALID_INPUT</faultstring></soap:Fault></soap:Body></soap:Envelope>",
+      "headers": {
+        "Date": "Tue, 20 Dec 2016 14:30:41 GMT",
+        "Transfer-Encoding": "chunked",
+        "Content-Type": "text/xml; charset=UTF-8",
+        "Server": "Europa",
+        "Proxy-Connection": "Keep-Alive",
+        "Connection": "Keep-Alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

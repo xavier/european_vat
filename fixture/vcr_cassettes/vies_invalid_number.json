@@ -1,0 +1,25 @@
+[
+  {
+    "request": {
+      "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"urn:ec.europa.eu:taxud:vies:services:checkVat:types\">\n  <soap:Body>\n    <ns1:checkVat>\n      <ns1:countryCode>BE</ns1:countryCode>\n      <ns1:vatNumber>1234567890</ns1:vatNumber>\n    </ns1:checkVat>\n  </soap:Body>\n</soap:Envelope>\n",
+      "headers": [],
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://ec.europa.eu/taxation_customs/vies/services/checkVatService"
+    },
+    "response": {
+      "body": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><checkVatResponse xmlns=\"urn:ec.europa.eu:taxud:vies:services:checkVat:types\"><countryCode>BE</countryCode><vatNumber>1234567890</vatNumber><requestDate>2016-12-20+01:00</requestDate><valid>false</valid><name>---</name><address>---</address></checkVatResponse></soap:Body></soap:Envelope>",
+      "headers": {
+        "Date": "Tue, 20 Dec 2016 14:30:39 GMT",
+        "Transfer-Encoding": "chunked",
+        "Content-Type": "text/xml; charset=UTF-8",
+        "Server": "Europa",
+        "Proxy-Connection": "Keep-Alive",
+        "Connection": "Keep-Alive"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

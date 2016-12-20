@@ -11,7 +11,10 @@ defmodule EuropeanVat.Mixfile do
      description: description,
      package: package,
      source_url: "https://github.com/xavier/european_vat",
-     homepage_url: "https://github.com/xavier/european_vat"]
+     homepage_url: "https://github.com/xavier/european_vat",
+     preferred_cli_env: [
+       vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+     ]]
   end
 
   # Configuration for the OTP application
@@ -50,6 +53,7 @@ defmodule EuropeanVat.Mixfile do
      {:sweet_xml,  "~> 0.6.0"},
      {:poison, "~> 2.0"},
      {:earmark, "~> 1.0.0", only: :dev},
-     {:ex_doc, "~> 0.14", only: :dev}]
+     {:ex_doc, "~> 0.14", only: :dev},
+     {:exvcr, "~> 0.7", only: :test}]
   end
 end
