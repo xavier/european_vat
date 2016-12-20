@@ -12,4 +12,4 @@
   "poison": {:hex, :poison, "2.0.1", "81248a36d1b602b17ea6556bfa8952492091f01af05173de11f8b297e2bbf088", [:mix], []},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], []},
   "ssl_verify_hostname": {:hex, :ssl_verify_hostname, "1.0.5"},
-  "sweet_xml": {:hex, :sweet_xml, "0.5.0", "d8f1b98527fbe829e9e4b3ad7a71f91ecc84e2e4ccd6c0c8a89b8e12cdcd7837", [:mix], []}}
+  "sweet_xml": {:hex, :sweet_xml, "0.6.3", "814265792baeb163421811c546581c522dfdcb9d1767b1e59959c52906414e80", [:mix], []}}
