@@ -1,4 +1,17 @@
-  defmodule EuropeanVat do
+defmodule EuropeanVat do
+
+  @moduledoc """
+
+  European VAT utilities for Elixir.
+
+  It provides functions to:
+
+  * sanitize European VAT numbers
+  * check if VAT must be charged for a given transaction
+  * check the validity of a VAT number using the [VIES web service](http://ec.europa.eu/taxation_customs/vies/faq.html)
+  * obtain up-to-date VAT rates for all EU countries
+
+  """
 
   alias EuropeanVat.{Supervisor,Server}
 
@@ -47,19 +60,28 @@
   # Per http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
   @vat_number_regex ~r/\A[0-9A-Za-z\+\*\.]{2,12}\z/
 
-  @doc "Starts the application which itself starts the server used communicate with the VAT Information Exchange System.
-  The application must be started if you wand to use `check_vat/2`, `check_vat?/2`, `rates/0`, `rates/1` or `rates/2`"
+  @doc """
+
+  Starts the application which itself starts the server used communicate with the VAT Information Exchange System
+
+  The application *must* be started if you wand to use `check_vat/2`, `check_vat?/2`, `rates/0`, `rates/1`
+  or `rates/2`
+
+  """
   def start(_type, args) do
     Supervisor.start_link(args)
   end
 
   @doc """
-    Removes unwanted characters from a supposed VAT number
 
-    iex> EuropeanVat.sanitize_vat_number(" BE 0829.071.668  ")
-    "BE0829071668"
-    iex> EuropeanVat.sanitize_vat_number("be0829071668")
-    "BE0829071668"
+  Removes unwanted characters from a supposed VAT number
+
+  iex> EuropeanVat.sanitize_vat_number(" BE 0829.071.668  ")
+  "BE0829071668"
+
+  iex> EuropeanVat.sanitize_vat_number("be0829071668")
+  "BE0829071668"
+
   """
   @spec sanitize_vat_number(vat_number) :: vat_number
   def sanitize_vat_number(nil), do: ""
@@ -71,46 +93,45 @@
 
   @doc """
 
-    Determines whether VAT is applicable for a given transaction.
+  Determines whether VAT is applicable for a given transaction.
 
-    The outcome is based on:
+  The outcome is based on:
 
-    * the seller and buyer country code
+  * the seller and buyer country code
+  * the presence or not of a VAT number
 
-    * the presence or not of a VAT number
+  Caution: this function does *not* verify the validity of the VAT number, only its presence.
+  You may use the `check_vat/2` function to ensure a given European VAT number is valid.
 
-    Caution: this function does *not* verify the validity of the VAT number, only its presence.
-    You may use the `check_vat/2` function to ensure a given European VAT number is valid.
+  ## Examples:
 
-    ### Examples:
+  Buyer and seller in the same country
 
-    Buyer and seller in the same country
+  iex> EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
+  true
 
-    iex> EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
-    true
+  Buyer and seller in different EU countries, VAT number present
 
-    Buyer and seller in different EU countries, VAT number present
+  iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
+  false
 
-    iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
-    false
+  Buyer and seller in different EU countries, no VAT number
 
-    Buyer and seller in different EU countries, no VAT number
+  iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
+  true
 
-    iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
-    true
+  iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
+  true
 
-    iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
-    true
+  Seller in EU, buyer outside of EU, no VAT number
 
-    Seller in EU, buyer outside of EU, no VAT number
+  iex> EuropeanVat.must_charge_vat?("BE", "US", nil)
+  false
 
-    iex> EuropeanVat.must_charge_vat?("BE", "US", nil)
-    false
+  Seller in EU, buyer outside of EU, company number
 
-    Seller in EU, buyer outside of EU, company number
-
-    iex> EuropeanVat.must_charge_vat?("BE", "US", "0000320193")
-    false
+  iex> EuropeanVat.must_charge_vat?("BE", "US", "0000320193")
+  false
 
   """
   @spec must_charge_vat?(country_code, country_code, vat_number) :: boolean
@@ -127,6 +148,11 @@
   end
 
   @doc """
+
+  Check the given VAT number using the VIES webservice.
+
+  Returns a `{:ok, response}` or `{:error, reason}` tuple
+
   """
   @spec check_vat(country_code, vat_number) :: {:ok, map} | {:error, String.t}
   def check_vat(country_code, vat_number) do
@@ -134,6 +160,11 @@
   end
 
   @doc """
+
+  Check the given VAT number using the VIES webservice.
+
+  Returns a boolean.
+
   """
   @spec check_vat?(country_code, vat_number) :: boolean
   def check_vat?(country_code, vat_number) do
@@ -142,9 +173,11 @@
   end
 
   @doc """
-    Returns a map containing VAT rates information for each European country.
 
-    The first call will hit the remote API, the result is cached for next calls
+  Returns a map containing VAT rates information for each EU country
+
+  The first call will hit the remote API, the result is cached for next calls
+
   """
   @spec rates :: map
   def rates do
@@ -152,9 +185,13 @@
   end
 
   @doc """
-    Returns a map containing VAT rate information for the given two letter ISO country code.
 
-    The first call will hit the remote API, the result is cached for next calls
+  Looks up the VAT rate information for the given two letter ISO country code
+
+  Returns a map containing the various applicable VAT rates.
+
+  The first call will hit the remote API, the result is cached for next calls
+
   """
   @spec rate(country_code) :: map
   def rate(country_code) do
@@ -162,10 +199,15 @@
   end
 
   @doc """
-    Returns the value for the given VAT rate of the given country code.
 
-    Rate type is a string and can be: `standard_rate`, `reduced_rate`, `reduced_rate_alt`, `super_reduced_rate`, or `parking_rate`.
-    If the rate is not applicable, `false` is returned
+  Looks up the value for the given VAT rate of the given country code
+
+  Rate type is a string and can be: `standard_rate`, `reduced_rate`, `reduced_rate_alt`,
+  `super_reduced_rate`, or `parking_rate`.
+
+  If the rate is not applicable, returns `false`.
+
+  The first call will hit the remote API, the result is cached for next calls
 
   """
   @spec rate(country_code, rate_type) :: float | false

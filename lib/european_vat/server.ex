@@ -3,7 +3,10 @@ defmodule EuropeanVat.Server do
 
   alias EuropeanVat.{ViesSoapClient, Rates}
 
+  @moduledoc false
+
   defmodule State do
+    @moduledoc false
     defstruct service: nil, rates: nil
   end
 

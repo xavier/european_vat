@@ -1,6 +1,8 @@
 defmodule EuropeanVat.ViesSoapClient do
+  @moduledoc false
 
   defmodule Service do
+    @moduledoc false
     defstruct url: nil
   end
 

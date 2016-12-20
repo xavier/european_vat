@@ -1,4 +1,5 @@
 defmodule EuropeanVat.Rates do
+   @moduledoc false
 
   @url "https://euvatrates.com/rates.json"
 

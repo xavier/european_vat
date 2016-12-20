@@ -1,6 +1,8 @@
 defmodule EuropeanVat.Supervisor do
   use Supervisor
 
+  @moduledoc false
+
   def start_link(args \\ []) do
     Supervisor.start_link(__MODULE__, args)
   end
