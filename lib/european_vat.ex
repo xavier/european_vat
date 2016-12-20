@@ -71,12 +71,15 @@
 
   @doc """
 
-    Determines whether VAT is applicable for a given transaction based on:
+    Determines whether VAT is applicable for a given transaction.
 
-      - the seller and buyer country code
-      - the presence or not of a VAT number
+    The outcome is based on:
 
-    This function does *not* verify the validity of the VAT number, only its presence.
+    * the seller and buyer country code
+
+    * the presence or not of a VAT number
+
+    Caution: this function does *not* verify the validity of the VAT number, only its presence.
     You may use the `check_vat/2` function to ensure a given European VAT number is valid.
 
     ### Examples:
@@ -89,14 +92,15 @@
     Buyer and seller in different EU countries, VAT number present
 
     iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
-    true
+    false
 
     Buyer and seller in different EU countries, no VAT number
 
     iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
-    false
+    true
+
     iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
-    false
+    true
 
     Seller in EU, buyer outside of EU, no VAT number
 
@@ -110,15 +114,15 @@
 
   """
   @spec must_charge_vat?(country_code, country_code, vat_number) :: boolean
-  def must_charge_vat?(seller_country, buyer_country, vat_number) do
-    if seller_country == buyer_country do
-      true
-    else
-      case sanitize_vat_number(vat_number) do
-        nil -> false
-        ""  -> false
-        _   -> Dict.has_key?(@member_states, buyer_country)
-      end
+  def must_charge_vat?(seller_country, seller_country, _), do: true
+  def must_charge_vat?(_seller_country, buyer_country, vat_number) do
+    case sanitize_vat_number(vat_number) do
+      "" ->
+        # No VAT number given, must charge only for EU buyers
+        eu_country?(buyer_country)
+      _ ->
+        # VAT number given, don't charge VAT
+        false
     end
   end
 
@@ -167,6 +171,14 @@
   @spec rate(country_code, rate_type) :: float | false
   def rate(country_code, rate_type) do
     country_code |> rate |> Dict.get(rate_type)
+  end
+
+  #
+  # Private
+  #
+
+  defp eu_country?(country_code) do
+    Dict.has_key?(@member_states, country_code)
   end
 
 end

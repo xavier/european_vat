@@ -51,13 +51,13 @@ EuropeanVat.sanitize_vat_number("be0829071668")
 EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
 # true
 
-# Buyer and seller in different EU countries, VAT number present
+# Buyer and seller in different EU countries, VAT number present (business)
 EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
-# true
-
-# Buyer and seller in different EU countries, no VAT number
-EuropeanVat.must_charge_vat?("NL", "BE", nil)
 # false
+
+# Buyer and seller in different EU countries, no VAT number (consumer)
+EuropeanVat.must_charge_vat?("NL", "BE", nil)
+# true
 
 # Seller in EU, buyer outside of EU, no VAT number
 EuropeanVat.must_charge_vat?("BE", "US", nil)
