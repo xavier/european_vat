@@ -107,31 +107,31 @@ defmodule EuropeanVat do
 
   Buyer and seller in the same country
 
-  iex> EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
-  true
+      iex> EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
+      true
 
   Buyer and seller in different EU countries, VAT number present
 
-  iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
-  false
+      iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
+      false
 
   Buyer and seller in different EU countries, no VAT number
 
-  iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
-  true
+      iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
+      true
 
-  iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
-  true
+      iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
+      true
 
   Seller in EU, buyer outside of EU, no VAT number
 
-  iex> EuropeanVat.must_charge_vat?("BE", "US", nil)
-  false
+      iex> EuropeanVat.must_charge_vat?("BE", "US", nil)
+      false
 
   Seller in EU, buyer outside of EU, company number
 
-  iex> EuropeanVat.must_charge_vat?("BE", "US", "0000320193")
-  false
+      iex> EuropeanVat.must_charge_vat?("BE", "US", "0000320193")
+      false
 
   """
   @spec must_charge_vat?(country_code, country_code, vat_number) :: boolean
