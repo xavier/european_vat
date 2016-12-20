@@ -10,8 +10,12 @@ defmodule EuropeanVat.Mixfile do
      deps: deps,
      description: description,
      package: package,
+     # Docs
+     name: "EuropeanVat" ,
      source_url: "https://github.com/xavier/european_vat",
      homepage_url: "https://github.com/xavier/european_vat",
+     docs: [main: "EuropeanVat", extras: ["README.md"]],
+     # Mix
      preferred_cli_env: [
        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
      ]]
