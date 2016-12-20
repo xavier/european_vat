@@ -35,10 +35,10 @@ The package can be installed via Hex as:
 
 ```Elixir
 
-EuropeanVat.sanitize_vat_number(" BE 0829.071.668  ")
+EuropeanVat.sanitize(" BE 0829.071.668  ")
 # "BE0829071668"
 
-EuropeanVat.sanitize_vat_number("be0829071668")
+EuropeanVat.sanitize("be0829071668")
 # "BE0829071668"
 
 ```

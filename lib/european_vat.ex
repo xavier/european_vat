@@ -76,16 +76,16 @@ defmodule EuropeanVat do
 
   Removes unwanted characters from a supposed VAT number
 
-  iex> EuropeanVat.sanitize_vat_number(" BE 0829.071.668  ")
+  iex> EuropeanVat.sanitize(" BE 0829.071.668  ")
   "BE0829071668"
 
-  iex> EuropeanVat.sanitize_vat_number("be0829071668")
+  iex> EuropeanVat.sanitize("be0829071668")
   "BE0829071668"
 
   """
-  @spec sanitize_vat_number(vat_number) :: vat_number
-  def sanitize_vat_number(nil), do: ""
-  def sanitize_vat_number(vat_number) do
+  @spec sanitize(vat_number) :: vat_number
+  def sanitize(nil), do: ""
+  def sanitize(vat_number) do
     vat_number
     |> String.replace(~r/[\s\t\.]/, "")
     |> String.upcase
@@ -137,7 +137,7 @@ defmodule EuropeanVat do
   @spec must_charge_vat?(country_code, country_code, vat_number) :: boolean
   def must_charge_vat?(seller_country, seller_country, _), do: true
   def must_charge_vat?(_seller_country, buyer_country, vat_number) do
-    case sanitize_vat_number(vat_number) do
+    case sanitize(vat_number) do
       "" ->
         # No VAT number given, must charge only for EU buyers
         eu_country?(buyer_country)
@@ -156,7 +156,7 @@ defmodule EuropeanVat do
   """
   @spec check_vat(country_code, vat_number) :: {:ok, map} | {:error, String.t}
   def check_vat(country_code, vat_number) do
-    Server.check_vat(Server, country_code, sanitize_vat_number(vat_number))
+    Server.check_vat(Server, country_code, sanitize(vat_number))
   end
 
   @doc """
