@@ -107,36 +107,36 @@ defmodule EuropeanVat do
 
   Buyer and seller in the same country
 
-      iex> EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
+      iex> EuropeanVat.charge?("BE", "BE", "BE0829071668")
       true
 
   Buyer and seller in different EU countries, VAT number present
 
-      iex> EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
+      iex> EuropeanVat.charge?("NL", "BE", "BE0829071668")
       false
 
   Buyer and seller in different EU countries, no VAT number
 
-      iex> EuropeanVat.must_charge_vat?("NL", "BE", nil)
+      iex> EuropeanVat.charge?("NL", "BE", nil)
       true
 
-      iex> EuropeanVat.must_charge_vat?("NL", "BE", "")
+      iex> EuropeanVat.charge?("NL", "BE", "")
       true
 
   Seller in EU, buyer outside of EU, no VAT number
 
-      iex> EuropeanVat.must_charge_vat?("BE", "US", nil)
+      iex> EuropeanVat.charge?("BE", "US", nil)
       false
 
   Seller in EU, buyer outside of EU, company number
 
-      iex> EuropeanVat.must_charge_vat?("BE", "US", "0000320193")
+      iex> EuropeanVat.charge?("BE", "US", "0000320193")
       false
 
   """
-  @spec must_charge_vat?(country_code, country_code, vat_number) :: boolean
-  def must_charge_vat?(seller_country, seller_country, _), do: true
-  def must_charge_vat?(_seller_country, buyer_country, vat_number) do
+  @spec charge?(country_code, country_code, vat_number) :: boolean
+  def charge?(seller_country, seller_country, _), do: true
+  def charge?(_seller_country, buyer_country, vat_number) do
     case sanitize(vat_number) do
       "" ->
         # No VAT number given, must charge only for EU buyers

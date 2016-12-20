@@ -48,19 +48,19 @@ EuropeanVat.sanitize("be0829071668")
 ```Elixir
 
 # Buyer and seller in the same country
-EuropeanVat.must_charge_vat?("BE", "BE", "BE0829071668")
+EuropeanVat.charge?("BE", "BE", "BE0829071668")
 # true
 
 # Buyer and seller in different EU countries, VAT number present (business)
-EuropeanVat.must_charge_vat?("NL", "BE", "BE0829071668")
+EuropeanVat.charge?("NL", "BE", "BE0829071668")
 # false
 
 # Buyer and seller in different EU countries, no VAT number (consumer)
-EuropeanVat.must_charge_vat?("NL", "BE", nil)
+EuropeanVat.charge?("NL", "BE", nil)
 # true
 
 # Seller in EU, buyer outside of EU, no VAT number
-EuropeanVat.must_charge_vat?("BE", "US", nil)
+EuropeanVat.charge?("BE", "US", nil)
 # false
 
 ```
