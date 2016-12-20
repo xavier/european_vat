@@ -69,11 +69,11 @@ EuropeanVat.charge?("BE", "US", nil)
 
 > Before interacting with the VIES web service, you **must** start the EuropeanVat application (see Installation).
 
-Going forward, you can use the `check_vat/2` function to verify VAT numbers:
+Going forward, you can use the `check/2` function to verify VAT numbers:
 
 ```Elixir
 
-EuropeanVat.check_vat("BE", "0829.071.668")
+EuropeanVat.check("BE", "0829.071.668")
 # {:ok,
 #  %{address: "RUE LONGUE 93\n1320 BEAUVECHAIN", country_code: "BE",
 #    name: "SPRL BIGUP", request_date: {{2016, 1, 24}, 60}, valid: true,

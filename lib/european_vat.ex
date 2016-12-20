@@ -64,7 +64,7 @@ defmodule EuropeanVat do
 
   Starts the application which itself starts the server used communicate with the VAT Information Exchange System
 
-  The application *must* be started if you wand to use `check_vat/2`, `check_vat?/2`, `rates/0`, `rates/1`
+  The application *must* be started if you wand to use `check/2`, `check?/2`, `rates/0`, `rates/1`
   or `rates/2`
 
   """
@@ -101,7 +101,7 @@ defmodule EuropeanVat do
   * the presence or not of a VAT number
 
   Caution: this function does *not* verify the validity of the VAT number, only its presence.
-  You may use the `check_vat/2` function to ensure a given European VAT number is valid.
+  You may use the `check/2` or `check?/2` functions to ensure a given European VAT number is valid.
 
   ## Examples:
 
@@ -154,8 +154,8 @@ defmodule EuropeanVat do
   Returns a `{:ok, response}` or `{:error, reason}` tuple
 
   """
-  @spec check_vat(country_code, vat_number) :: {:ok, map} | {:error, String.t}
-  def check_vat(country_code, vat_number) do
+  @spec check(country_code, vat_number) :: {:ok, map} | {:error, String.t}
+  def check(country_code, vat_number) do
     Server.check_vat(Server, country_code, sanitize(vat_number))
   end
 
@@ -166,9 +166,9 @@ defmodule EuropeanVat do
   Returns a boolean.
 
   """
-  @spec check_vat?(country_code, vat_number) :: boolean
-  def check_vat?(country_code, vat_number) do
-    {:ok, response} = check_vat(country_code, vat_number)
+  @spec check?(country_code, vat_number) :: boolean
+  def check?(country_code, vat_number) do
+    {:ok, response} = check(country_code, vat_number)
     response.valid
   end
 
