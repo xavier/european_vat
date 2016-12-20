@@ -23,7 +23,7 @@ The package can be installed via Hex as:
           [{:european_vat, "~> 0.0.1"}]
         end
 
-  2. Ensure european_vat is started before your application:
+  2. Ensure european_vat is started before your application in `mix.exs`:
 
         def application do
           [applications: [:european_vat]]
